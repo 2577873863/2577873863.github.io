@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>收藏集~by zzh</title>
@@ -7,155 +8,199 @@
     [v-cloak] {
       display: none;
     }
-    body{
+
+    body {
       padding-left: 20px;
+    }
+
+    .triangle {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border: 5px solid transparent;
+      border-top-color: black;
+      transition: all 0.3s;
+    }
+    .show{
+      margin-top: 2.5px;
+      transform: rotate(0deg);
+    }
+    .hide{
+      margin-bottom:2.5px;
+      transform: rotate(-90deg);
     }
   </style>
 
 </head>
+
 <body>
   <div id="app" v-cloak>
-    <div class="container" v-for="item in list" :key="item.title">
-      <h3>{{item.title}}</h3>
-      <ul>
-        <li v-for="content in item.contents" :key="content.title">
-          <a :href="content.href" target="_blank">{{content.title}}</a>
-        </li>
-      </ul>
-      <hr>
+    <div class="container" v-for="(item,index) in list" :key="item.title">
+      <h3 style="cursor: pointer;" @click="toggle(index, item.isShow)">
+        <span :class="['triangle', item.isShow ? 'show':'hide']"> </span>
+        <span>{{item.title}}</span>
+      </h3>
+      <panel :data="item.contents" :show="item.isShow"></panel>
+      <!-- <hr> -->
     </div>
   </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script>
+  // panel组件
+  const panel = {
+    props: ['data', 'show'],
+    template: `
+      <ol 
+        :style="{
+          transition:'height 0.4s',
+          marginLeft:'30px',
+          overflow:'hidden',
+          height:show? data.length*35+'px':'0px'
+        }"
+      >
+        <li style="margin:10px 0;" v-for="content in data" :key="content.title">
+          <a style="text-decoration:none" :href="content.href" target="_blank">{{content.title}}</a>
+        </li>
+      </ol>
+    `
+  }
+
+  // 页面
   const app = new Vue({
-    el:"#app",
-    data(){
+    el: "#app",
+    data() {
       return {
-        list:[
-          {
-            title:'常用文档',
-            contents:[
-              {
-                title:'MDN',
-                href:'https://developer.mozilla.org/zh-CN/docs/Web/JavaScript',
+        list: [{
+            isShow: true,
+            title: '常用文档',
+            contents: [{
+                title: 'MDN',
+                href: 'https://developer.mozilla.org/zh-CN/docs/Web/JavaScript',
               },
               {
-                title:'segmentfault - 思否',
-                href:'https://segmentfault.com/',
+                title: 'segmentfault - 思否',
+                href: 'https://segmentfault.com/',
               },
               {
-                title:'stackoverflow',
-                href:'https://stackoverflow.com/',
+                title: 'stackoverflow',
+                href: 'https://stackoverflow.com/',
               },
               {
-                title:'JSDoc 文档',
-                href:'http://yuri4ever.github.io/jsdoc/',
+                title: 'JSDoc 文档',
+                href: 'http://yuri4ever.github.io/jsdoc/',
               }
             ]
           },
           {
-            title:'Angular/Ionic',
-            contents:[
-              {
-                title:'Angular7创建项目、组件、服务以及服务、路由的使用和父子组件间传值总结',
-                href:'https://tomoya92.github.io/2019/02/18/angular-helloworld/',
+            isShow: true,
+            title: 'Angular/Ionic',
+            contents: [{
+                title: 'Angular7创建项目、组件、服务以及服务、路由的使用和父子组件间传值总结',
+                href: 'https://tomoya92.github.io/2019/02/18/angular-helloworld/',
               },
               {
-                title:'Angular HTTP Client 快速入门',
-                href:'https://segmentfault.com/a/1190000010259536',
+                title: 'Angular HTTP Client 快速入门',
+                href: 'https://segmentfault.com/a/1190000010259536',
               },
               {
-                title:'angular8.0一些新建页面命令',
-                href:'https://blog.csdn.net/qweasdzxc_1092665276/article/details/104038087',
+                title: 'angular8.0一些新建页面命令',
+                href: 'https://blog.csdn.net/qweasdzxc_1092665276/article/details/104038087',
               },
               {
-                title:'Ionic开发App中重要的部分',
-                href:'https://juejin.im/post/6844903769797296141',
-              },
-            ]
-          },
-          {
-            title:'JavaScript',
-            contents:[
-              {
-                title:'ECMAScript 6 入门',
-                href:'https://es6.ruanyifeng.com/#docs/intro',
-              },
-              {
-                title:'Promise和async await详解',
-                href:'https://juejin.im/post/6844903608882823176',
-              },
-              {
-                title:'前端 100 问',
-                href:'https://juejin.im/post/6844903885488783374?utm_source=gold_browser_extension',
+                title: 'Ionic开发App中重要的部分',
+                href: 'https://juejin.im/post/6844903769797296141',
               },
             ]
           },
           {
-            title:'Vue',
-            contents:[
-              {
-                title:'vue3中文文档（个人译）',
-                href:'https://www.vue3js.cn/docs/zh/guide/introduction.html',
+            isShow: true,
+            title: 'JavaScript',
+            contents: [{
+                title: 'ECMAScript 6 入门',
+                href: 'https://es6.ruanyifeng.com/#docs/intro',
               },
               {
-                title:'Vue 应用性能优化指南',
-                href:'https://juejin.im/post/6844903677262561293',
-              },
-            ]
-          },
-          {
-            title:'React',
-            contents:[
-              {
-                title:'React小书',
-                href:'http://huziketang.mangojuice.top/books/react/lesson1',
+                title: 'Promise和async await详解',
+                href: 'https://juejin.im/post/6844903608882823176',
               },
               {
-                title:'React 应用性能优化指南',
-                href:'https://juejin.im/post/6844903640902156301',
+                title: '前端 100 问',
+                href: 'https://juejin.im/post/6844903885488783374?utm_source=gold_browser_extension',
               },
             ]
           },
           {
-            title:'Node',
-            contents:[
+            isShow: true,
+            title: 'Vue',
+            contents: [{
+                title: 'vue3中文文档（个人译）',
+                href: 'https://www.vue3js.cn/docs/zh/guide/introduction.html',
+              },
               {
-                title:'Node.js 模块系统源码',
-                href:'https://juejin.im/post/6844904016317513741',
+                title: 'Vue 应用性能优化指南',
+                href: 'https://juejin.im/post/6844903677262561293',
               },
             ]
           },
           {
-            title:'小程序',
-            contents:[
+            isShow: true,
+            title: 'React',
+            contents: [{
+                title: 'React小书',
+                href: 'http://huziketang.mangojuice.top/books/react/lesson1',
+              },
               {
-                title:'彻底搞懂小程序登录流程',
-                href:'https://juejin.im/post/6844903702726180871',
-              }
+                title: 'React 应用性能优化指南',
+                href: 'https://juejin.im/post/6844903640902156301',
+              },
             ]
           },
           {
-            title:'Git/GitHub',
-            contents:[
-              {
-                title:'GitHub搜索技巧',
-                href:'https://juejin.im/post/6891056415440535565?utm_source=gold_browser_extension',
+            isShow: true,
+            title: 'Node',
+            contents: [{
+              title: 'Node.js 模块系统源码',
+              href: 'https://juejin.im/post/6844904016317513741',
+            }, ]
+          },
+          {
+            isShow: true,
+            title: '小程序',
+            contents: [{
+              title: '彻底搞懂小程序登录流程',
+              href: 'https://juejin.im/post/6844903702726180871',
+            }]
+          },
+          {
+            isShow: true,
+            title: 'Git/GitHub',
+            contents: [{
+                title: 'GitHub搜索技巧',
+                href: 'https://juejin.im/post/6891056415440535565?utm_source=gold_browser_extension',
               },
               {
-                title:'git常用命令',
-                href:'https://juejin.im/post/5a2cdfe26fb9a0452936b07f',
+                title: 'git常用命令',
+                href: 'https://juejin.im/post/5a2cdfe26fb9a0452936b07f',
               },
               {
-                title:'git合并分支',
-                href:'https://www.jianshu.com/p/26d050497abb',
+                title: 'git合并分支',
+                href: 'https://www.jianshu.com/p/26d050497abb',
               },
             ]
           }
         ]
       }
+    },
+    methods:{
+      toggle(idx, prevShow){
+        this.list[idx].isShow = !prevShow;
+      }
+    },
+    components: {
+      panel: panel
     }
   })
 </script>
+
 </html>
